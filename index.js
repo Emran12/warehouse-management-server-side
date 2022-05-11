@@ -27,10 +27,36 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
     app.get("/product/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await medicineCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.put("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const product = req.body;
+      const updatedProduct = {
+        $set: {
+          quantity: product.quantity,
+        },
+      };
+      const result = await medicineCollection.updateOne(
+        filter,
+        updatedProduct,
+        options
+      );
+      res.send(result);
+    });
+
+    app.delete("/product/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await medicineCollection.deleteOne(query);
       res.send(result);
     });
   } finally {
