@@ -10,6 +10,7 @@ app.use(express.json());
 
 const uri =
   "mongodb+srv://dbuser1:DBuser1@cluster0.yrfnd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -21,6 +22,14 @@ async function run() {
     const medicineCollection = client
       .db("medicineWarehouse")
       .collection("medicine");
+
+    app.post("/products", async (req, res) => {
+      const product = req.body;
+      console.log(product);
+      const result = await medicineCollection.insertOne(product);
+      res.send(result);
+    });
+
     app.get("/products", async (req, res) => {
       const query = {};
       const cursor = medicineCollection.find(query);
