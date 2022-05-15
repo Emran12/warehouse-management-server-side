@@ -52,6 +52,7 @@ async function run() {
       const updatedProduct = {
         $set: {
           quantity: product.quantity,
+          email: product.email,
         },
       };
       const result = await medicineCollection.updateOne(
