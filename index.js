@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const ObjectId = require("mongodb").ObjectId;
 const app = express();
 const port = process.env.PORT || 5000;
@@ -42,6 +43,14 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const result = await medicineCollection.findOne(query);
       res.send(result);
+    });
+
+    app.post("/login", async (req, res) => {
+      const user = req.body;
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "1d",
+      });
+      res.send(accessToken);
     });
 
     app.put("/product/:id", async (req, res) => {
